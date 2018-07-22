@@ -1,9 +1,27 @@
 ---
 # defaults/main.yml for collabora_code
-#
-# All Variables must be prefixed with "wtd_":
-#
-# - wtd_my_cool_variable: "foo"
-# - wtd_another_variable: "bar"
-#
-# If a variable needs explanation, it should be done here.
+
+# state can be set to "present" / "absent"
+wtd_collabora_code_state: "present"
+
+wtd_collabora_code_packages:
+  - loolwsd
+  - CODE-brand
+
+wtd_collabora_code_dont_gen_ssl_cert: false
+wtd_collabora_code_domain: ""
+wtd_collabora_code_cert_domain: ""
+wtd_collabora_code_server_name: ""
+wtd_collabora_code_dictionaries: ""
+
+# webserver settings
+wtd_collabora_code_webserver: "nginx"
+
+wtd_collabora_code_webserver_nginx_vhost_file_name: "collabora-code.conf"
+
+wtd_collabora_code_webserver_nginx_ssl_protocols: "TLSv1 TLSv1.1 TLSv1.2"
+wtd_collabora_code_webserver_nginx_ssl_ciphers: "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH"
+wtd_collabora_code_webserver_nginx_ssl_prefer_server_ciphers: "on"
+
+wtd_collabora_code_webserver_nginx_ssl_certificate: "/etc/nginx/ssl/cloud.example.com.crt"
+wtd_collabora_code_webserver_nginx_ssl_certificate_key: "/etc/nginx/ssl/cloud.example.com.key"
