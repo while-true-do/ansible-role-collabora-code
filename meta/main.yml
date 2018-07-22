@@ -1,5 +1,7 @@
 # CHANGEME: Fill in all needed information
-dependencies: []
+dependencies:
+  - while_true_do.repo_collabora_code
+  - while_true_do.nginx
 
 galaxy_info:
   role_name: collabora_code
@@ -7,19 +9,10 @@ galaxy_info:
   description: # Fill in the same description as in the README.md and for the repository
   company: while-true-do.org
 
-# If the issue tracker for your role is not on github, uncomment the
-# next line and provide a value
-# issue_tracker_url: http://example.com/issue/tracker
-
   github_branch: master
   license: BSD
 
   min_ansible_version: 2.0
-
-# If this a Container Enabled role, provide the minimum Ansible Container version.
-# min_ansible_container_version:
-
-# platforms is a list of platforms, and each platform has a name and a list of versions.
 
   platforms:
   - name: EL
