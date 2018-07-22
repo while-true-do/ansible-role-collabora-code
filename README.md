@@ -3,7 +3,7 @@
 # Ansible Role: collabora-code
 | This role installs and configures Collabora Online Development Edition.
 
-Collabora Online Development Edition (CODE) is a nice tool to have LibreOffice in as a web service.
+Collabora Online Development Edition (CODE) is a nice tool to have LibreOffice as a web service.
 
 ## Motivation
 
