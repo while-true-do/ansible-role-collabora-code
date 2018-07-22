@@ -1,16 +1,13 @@
 [![Build Status](https://travis-ci.org/while-true-do/ansible-role-collabora-code.svg?branch=master)](https://travis-ci.org/while-true-do/ansible-role-collabora-code)
 
 # Ansible Role: collabora-code
-| A short description **what** the role does goes here.
+| This role installs and configures Collabora Online Development Edition.
 
-<!--
--  Explain a bit more, if needed.
--  You can use bullets or write a small text
--->
+Collabora Online Development Edition (CODE) is a nice tool to have Libreoffice in as a webservice.
 
 ## Motivation
 
-<!-- Explain a bit **why** this role is needed. -->
+Integrates well with Nextcloud ;)
 
 ## Installation
 
@@ -30,37 +27,57 @@ git clone https://github.com/while-true-do/ansible-role-collabora-code.git while
 
 Used Modules:
 
--   [module1](link)
--   [module2](link)
+-   [command_module](https://docs.ansible.com/ansible/latest/modules/command_module.html)
+-   [file_module](https://docs.ansible.com/ansible/latest/modules/file_module.html)
+-   [include_tasks_module](https://docs.ansible.com/ansible/latest/modules/include_tasks_module.html)
+-   [package_module](https://docs.ansible.com/ansible/latest/modules/package_module.html)
+-   [service_module](https://docs.ansible.com/ansible/latest/modules/service_module.html)
+-   [set_fact_module](https://docs.ansible.com/ansible/latest/modules/set_fact_module.html)
+-   [template_module](https://docs.ansible.com/ansible/latest/modules/template_module.html)
 
 ## Dependencies
 
-<!--
-Describe, if other roles are needed and link them here.
-You also have to put the dependencies in the requirements.yml.
+This role has the below dependencies:
+
+-   <https://galaxy.ansible.com/while_true_do/nginx>
+-   <https://galaxy.ansible.com/while_true_do/repo_collabora_code>
+
+You can install them with:
 
 ```
 ansible-galaxy install -r requirements.yml
 ```
 
-If nothing is needed, please write "None."
--->
-
 ## Role Variables
 
-<!--
-The variable files should explain itself and pasted/linked here.
-Explanation should be done **in** the files, if needed.
--->
-
 ```yaml
-# defaults/main.yml
-foo: bar
-```
+# defaults/main.yml for collabora_code
 
-```yaml
-# vars/main.yml
-bar: foo
+# state can be set to "present" / "absent"
+wtd_collabora_code_state: "present"
+
+wtd_collabora_code_packages:
+  - loolwsd
+  - CODE-brand
+
+wtd_collabora_code_dont_gen_ssl_cert: false
+wtd_collabora_code_cert_domain: ""
+
+wtd_collabora_code_domains: "localhost" # example "cloud\\.example\\.com\\|nextcloud\\.example\\.org"
+wtd_collabora_code_server_name: ""
+wtd_collabora_code_dictionaries: "de_DE en_GB en_US es_ES fr_FR it nl pt_BR pt_PT ru"
+
+# webserver settings
+wtd_collabora_code_webserver: "nginx"
+
+wtd_collabora_code_webserver_nginx_vhost_file_name: "collabora-code.conf"
+
+wtd_collabora_code_webserver_nginx_ssl_protocols: "TLSv1 TLSv1.1 TLSv1.2"
+wtd_collabora_code_webserver_nginx_ssl_ciphers: "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH"
+wtd_collabora_code_webserver_nginx_ssl_prefer_server_ciphers: "on"
+
+wtd_collabora_code_webserver_nginx_ssl_certificate: "/etc/nginx/ssl/cloud.example.com.crt"
+wtd_collabora_code_webserver_nginx_ssl_certificate_key: "/etc/nginx/ssl/cloud.example.com.key"
 ```
 
 ## Example Playbook
@@ -78,7 +95,7 @@ Advanced Example:
 ```yaml
 - hosts: servers
   roles:
-    - { role: while_true_do.collabora_code, foo: bar, bar: foo }
+    - { role: while_true_do.collabora_code, wtd_collabora_code_webserver_nginx_ssl_certificate: "/etc/nginx/ssl/other.crt", wtd_collabora_code_webserver_nginx_ssl_certificate_key: "/etc/nginx/ssl/other.key" }
 ```
 
 ## Testing
