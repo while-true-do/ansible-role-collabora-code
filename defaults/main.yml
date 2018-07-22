@@ -9,10 +9,11 @@ wtd_collabora_code_packages:
   - CODE-brand
 
 wtd_collabora_code_dont_gen_ssl_cert: false
-wtd_collabora_code_domain: ""
 wtd_collabora_code_cert_domain: ""
+
+wtd_collabora_code_domains: "localhost" # example "cloud\\.example\\.com\\|nextcloud\\.example\\.org"
 wtd_collabora_code_server_name: ""
-wtd_collabora_code_dictionaries: ""
+wtd_collabora_code_dictionaries: "de_DE en_GB en_US es_ES fr_FR it nl pt_BR pt_PT ru"
 
 # webserver settings
 wtd_collabora_code_webserver: "nginx"
