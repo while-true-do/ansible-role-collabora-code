@@ -1,5 +1,6 @@
 # from galaxy
-# - src: while_true_do.yum
+- src: while_true_do.nginx
+- src: while_true_do.repo_collabora_code
 
 # from GitHub
 # - src: https://github.com/while-true-do/ansible-role-yum
