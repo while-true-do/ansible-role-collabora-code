@@ -1,0 +1,39 @@
+#!/bin/sh
+# {{ ansible_managed }}
+
+{% if wtd_collabora_code_dont_gen_ssl_cert is defined and wtd_collabora_code_dont_gen_ssl_cert %}
+DONT_GEN_SSL_CERT=true
+{% else %}
+DONT_GEN_SSL_CERT=false
+{% endif %}
+{% if wtd_collabora_code_cert_domain is defined %}
+cert_domain="{{ wtd_collabora_code_cert_domain }}"
+{% endif %}
+
+if [ "$DONT_GEN_SSL_CERT" = false ]
+then
+  cd /etc/loolwsd/ || exit 1
+  openssl genrsa -out certs/ca/root.key.pem 4096
+  openssl req -x509 -new -nodes -key certs/ca/root.key.pem -days 9131 -out certs/ca/root.crt.pem -subj "/C=DE/ST=BW/L=Stuttgart/O=Dummy Authority/CN=Dummy Authority"
+  openssl genrsa -out "certs/servers/localhost/privkey.pem" 4096 -key "certs/servers/localhost/privkey.pem"
+
+  # Generate new SSL certificate instead of using the default
+  if [ -v "$cert_domain" ] && [ -n "$cert_domain" ]
+  then
+    openssl req -key "certs/servers/localhost/privkey.pem" -new -sha256 -out "certs/tmp/localhost.csr.pem" -subj "/C=DE/ST=BW/L=Stuttgart/O=Dummy Authority/CN=$cert_domain"
+  else
+    openssl req -key "certs/servers/localhost/privkey.pem" -new -sha256 -out "certs/tmp/localhost.csr.pem" -subj "/C=DE/ST=BW/L=Stuttgart/O=Dummy Authority/CN=localhost"
+  fi
+
+  openssl x509 -req -in certs/tmp/localhost.csr.pem -CA certs/ca/root.crt.pem -CAkey certs/ca/root.key.pem -CAcreateserial -out certs/servers/localhost/cert.pem -days 9131
+  ln -f -s certs/servers/localhost/privkey.pem /etc/loolwsd/key.pem
+  ln -f -s certs/servers/localhost/cert.pem /etc/loolwsd/cert.pem
+  ln -f -s certs/ca/root.crt.pem /etc/loolwsd/ca-chain.cert.pem
+fi
+
+# Replace trusted host and set admin username and password
+# perl -pi -e "s/localhost<\\/host>/${domain}<\\/host>/g" /etc/loolwsd/loolwsd.xml
+# perl -pi -e "s/<username (.*)>.*<\\/username>/<username \\1>${username}<\\/username>/" /etc/loolwsd/loolwsd.xml
+# perl -pi -e "s/<password (.*)>.*<\\/password>/<password \\1>${password}<\\/password>/" /etc/loolwsd/loolwsd.xml
+# perl -pi -e "s/<server_name (.*)>.*<\\/server_name>/<server_name \\1>${server_name}<\\/server_name>/" /etc/loolwsd/loolwsd.xml
+# perl -pi -e "s/<allowed_languages (.*)>.*<\\/allowed_languages>/<allowed_languages \\1>${dictionaries:-de_DE en_GB en_US es_ES fr_FR it nl pt_BR pt_PT ru}<\\/allowed_languages>/" /etc/loolwsd/loolwsd.xml

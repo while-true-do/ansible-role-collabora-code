@@ -1,0 +1,100 @@
+---
+# tasks/CentOS.yml for collabora_code
+
+- name: set fact for task names to Add
+  set_fact:
+    wtd_collabora_code_task_name: "Add"
+  when: wtd_collabora_code_state == "present"
+
+- name: set fact for task names to Remove
+  set_fact:
+    wtd_collabora_code_task_name: "Remove"
+  when: wtd_collabora_code_state != "present"
+
+- name: "{{ wtd_collabora_code_task_name }} Collabora Online CODE packages"
+  package:
+    name: "{{ wtd_collabora_code_packages }}"
+    state: "{{ wtd_collabora_code_state }}"
+  become: yes
+
+- name: Configure /etc/loolwsd
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: lool
+    group: root
+    mode: 0750
+  loop:
+    - /etc/loolwsd
+    - /etc/loolwsd/certs
+    - /etc/loolwsd/certs/ca
+    - /etc/loolwsd/certs/tmp
+    - /etc/loolwsd/certs/servers
+    - /etc/loolwsd/certs/servers/localhost
+  become: yes
+  when: wtd_collabora_code_state == "present"
+
+- name: Configure the startup script
+  template:
+    src: configure-libreoffice.sh.j2
+    dest: /etc/loolwsd/configure-libreoffice.sh
+    owner: lool
+    group: root
+    mode: 0750
+  become: yes
+  when: wtd_collabora_code_state == "present"
+  notify:
+    - Restart loolwsd
+
+- name: Configure the main configuration file
+  template:
+    src: loolwsd.xml.j2
+    dest: /etc/loolwsd/loolwsd.xml
+    owner: lool
+    group: root
+    mode: 0640
+  become: yes
+  when: wtd_collabora_code_state == "present"
+  notify:
+    - Restart loolwsd
+
+- name: Configure systemd extend directory
+  file:
+    path: /etc/systemd/system/loolwsd.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+  when: wtd_collabora_code_state == "present"
+
+- name: Extend loolwsd.service unit file
+  template:
+    src: systemd-unit-extend.conf.j2
+    dest: /etc/systemd/system/loolwsd.service.d/configure-libreoffice.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: wtd_collabora_code_service_unit_extend
+  become: yes
+  when: wtd_collabora_code_state == "present"
+
+- debug:
+    var: wtd_collabora_code_service_unit_extend
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  args:
+    warn: no
+  become: yes
+  when: wtd_collabora_code_service_unit_extend.changed
+  notify:
+    - Restart loolwsd
+
+- name: Enable and Start loolwsd
+  service:
+    name: loolwsd
+    state: started
+    enabled: yes
+  become: yes
+  when: wtd_collabora_code_state == "present"
