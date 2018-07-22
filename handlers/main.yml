@@ -1,2 +1,8 @@
 ---
 # handlers/main.yml for collabora_code
+
+- name: Restart loolwsd
+  service:
+    name: loolwsd
+    state: restarted
+  become: yes
