@@ -108,10 +108,11 @@
     <tile_cache_persistent desc="Should the tiles persist between two editing sessions of the given document?" type="bool" default="true">true</tile_cache_persistent>
 
     <admin_console desc="Web admin console settings.">
-        <enable desc="Enable the admin console functionality" type="bool" default="true">true</enable>
-        <enable_pam desc="Enable admin user authentication with PAM" type="bool" default="false">false</enable_pam>
-        <username desc="The username of the admin console. Ignored if PAM is enabled."></username>
+        <enable desc="Enable the admin console functionality" type="bool" default="true">{% if wtd_collabora_code_admin_console_enabled %}true{% else %}false{% endif %}</enable>
+        <enable_pam desc="Enable admin user authentication with PAM" type="bool" default="false">{% if wtd_collabora_code_admin_console_enable_pam %}true{% else %}false{% endif %}</enable_pam>
+        <username desc="The username of the admin console. Ignored if PAM is enabled.">{{ wtd_collabora_code_admin_console_user_name }}</username>
         <password desc="The password of the admin console. Deprecated on most platforms. Instead, use PAM or loolconfig to set up a secure password."></password>
+        {% if wtd_collabora_code_admin_console_secure_password is defined %}<secure_password desc="Salt and password hash combination generated using PBKDF2 with SHA512 digest.">{{ wtd_collabora_code_admin_console_secure_password }}</secure_password>{% endif %}
     </admin_console>
 
     <monitors desc="Addresses of servers we connect to on start for monitoring">

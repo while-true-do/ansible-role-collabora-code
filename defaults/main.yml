@@ -15,6 +15,12 @@ wtd_collabora_code_domains: "localhost" # example "cloud\\.example\\.com\\|nextc
 wtd_collabora_code_server_name: ""
 wtd_collabora_code_dictionaries: "de_DE en_GB en_US es_ES fr_FR it nl pt_BR pt_PT ru"
 
+# admin console settings
+wtd_collabora_code_admin_console_enabled: true
+wtd_collabora_code_admin_console_enable_pam: false
+wtd_collabora_code_admin_console_user_name: ""
+# wtd_collabora_code_admin_console_secure_password: ""
+
 # webserver settings
 wtd_collabora_code_webserver: "nginx"
 
