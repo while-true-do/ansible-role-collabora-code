@@ -1,0 +1,13 @@
+---
+# tasks/nginx.yml for collabora_code
+
+- name: Configure virtual host
+  template:
+    src: nginx-vhost.j2
+    dest: "{{ wtd_nginx_vhost_path }}/{{ wtd_collabora_code_webserver_nginx_vhost_file_name }}"
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify:
+    - Reload nginx

@@ -1,2 +1,8 @@
 ---
 # tasks/main.yml for collabora_code
+
+- name: Include distribution specific tasks
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: Include tasks for webserver
+  include_tasks: "{{ wtd_collabora_code_webserver }}.yml"
